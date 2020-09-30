@@ -3,24 +3,29 @@
             [konva-cljs.core :as ko]
             [reagent.core :as r]
             [goog.dom :as dom]
-            [reagent.dom :as rdom]))
+            [goog.object :as ob]
+            [reagent.dom :as rdom]
+            [clojure.string :as str]
+            ["konva" :default k]))
 
-
+;(println "A: " (:noise ko/filters))
 (defn main-panel []
   [kc/stage {:width  (.-innerWidth js/window)
              :height (.-innerHeight js/window)}
    [kc/layer
-    [kc/shape {:fill         "#00D2FF"
-               :stroke       "black"
-               :stroke-width 4
-               :scene-func   (fn [ctx shape]
-                               (-> ctx
-                                   (ko/begin-path)
-                                   (ko/move-to 20 50)
-                                   (ko/line-to 220 80)
-                                   (ko/quadratic-curve-to {:cpx 150 :cpy 100 :x 260 :y 170})
-                                   (ko/close-path)
-                                   (ko/fill-stroke-shape shape)))}]]])
+
+    [kc/rect
+     {
+      :filters    (r/as-element [(ob/get (.-Filters k) "Noise")])
+      :noise      1
+      :x          200
+      :y          10
+      :width      50
+      :height     50
+      :fill       "green"
+      :shadowBlur 10}]
+
+    ]])
 
 
 (defn ^:dev/after-load mount-root []

@@ -1,5 +1,14 @@
 (ns konva-cljs.core
-  (:require ["react-konva" :as rk]))
+  (:require [clojure.string :as str]
+            ["react-konva" :as rk]
+            ["konva" :default k]))
+
+
+(def filters (reduce-kv
+              (fn [acc k v]
+                (assoc acc (-> k str/lower-case keyword) v))
+              {}
+              (js->clj (.-Filters k))))
 
 
 (defn arc [ctx {:keys [x y r start-angle end-angle anti-clockwise?]}]
@@ -54,9 +63,33 @@
    ctx))
 
 
-(defn quadratic-curve-to
-  [ctx {:keys [cpx cpy x y]}]
-  (doto ctx (.quadraticCurveTo cpx cpy x y)))
+(defn ellipse [ctx {:keys [x y radius-x radius-y rotation start-angle end-angle anti-clockwise?]}]
+  (doto ctx (.ellipse x y radius-x radius-y rotation start-angle end-angle anti-clockwise?)))
+
+
+(defn fill [ctx]
+  (doto ctx .fill))
+
+
+(defn fill-text
+  [ctx {:keys [text x y max-width]}]
+  (doto ctx (.fillText text x y max-width)))
+
+
+(defn get-image-data [ctx {:keys [sx sy sw sh]}]
+  (doto ctx (.getImageData sx sy sw sh)))
+
+
+(defn create-image-data
+  ([ctx image-data]
+   (doto ctx (.createImageData ctx image-data)))
+  ([ctx width height]
+   (doto ctx (.createImageData ctx width height))))
+
+
+(defn line-to
+  [ctx x y]
+  (doto ctx (.lineTo x y)))
 
 
 (defn move-to
@@ -64,9 +97,66 @@
   (doto ctx (.moveTo x y)))
 
 
-(defn line-to
-  [ctx x y]
-  (doto ctx (.lineTo x y)))
+(defn put-image-data
+  ([ctx image-data dx dy]
+   (doto ctx (.putImageData ctx image-data dx dy)))
+  ([ctx image-data {:keys [dirty-x dirty-y dirty-w dirty-h]}]
+   (doto ctx (.putImageData ctx image-data dirty-x dirty-y dirty-w dirty-h))))
+
+
+(defn quadratic-curve-to
+  [ctx {:keys [cpx cpy x y]}]
+  (doto ctx (.quadraticCurveTo cpx cpy x y)))
+
+
+(defn rect [ctx {:keys [x y w h]}]
+  (doto ctx (.rect x y w h)))
+
+
+(defn restore [ctx]
+  (doto ctx .restore))
+
+
+(defn rotate [ctx angle]
+  (doto ctx (.rotate angle)))
+
+
+(defn save [ctx]
+  (doto ctx .save))
+
+
+(defn scale [ctx x y]
+  (doto ctx (.scale x y)))
+
+
+(defn set-line-dash [ctx segments]
+  (doto ctx (.setLineDash segments)))
+
+
+(defn set-transform
+  ([ctx matrix]
+   (doto ctx (.setTransform matrix)))
+  ([ctx m11 m12 m21 m22 dx dy]
+   (doto ctx (.setTransform m11 m12 m21 m22 dx dy))))
+
+
+(defn stroke [ctx]
+  (doto ctx .stroke))
+
+
+(defn stroke-text
+  ([ctx text x y]
+   (doto ctx (.strokeText text x y)))
+  ([ctx text x y max-width]
+   (doto ctx (.strokeText text x y max-width))))
+
+
+(defn transform [ctx {:keys [m11 m12 m21 m22 dx dy]}]
+  (doto ctx (.transform m11 m12 m21 m22 dx dy)))
+
+
+(defn translate [ctx x y]
+  (doto ctx (.translate x y)))
 
 
 (defn fill-stroke-shape [ctx shape]
