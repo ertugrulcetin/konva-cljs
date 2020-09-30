@@ -1,9 +1,8 @@
-(ns konva-cljs.nodes
+(ns konva-cljs.components
   (:require [reagent.core :as r]
             ["react-konva" :as rk]))
 
 
-;; Konva Nodes
 (def arc (r/adapt-react-class rk/Arc))
 (def arrow (r/adapt-react-class rk/Arrow))
 (def circle (r/adapt-react-class rk/Circle))

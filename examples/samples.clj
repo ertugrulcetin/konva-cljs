@@ -6,7 +6,7 @@
        [n/layer
         [n/shape {:fill         "#00D2FF"
                   :stroke       "black"
-                  :stroke-width "4"
+                  :stroke-width 4
                   :scene-func   (fn [ctx shape]
                                     (-> ctx
                                         (begin-path)
