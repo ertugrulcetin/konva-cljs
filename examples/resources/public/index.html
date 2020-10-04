@@ -4,6 +4,30 @@
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>konva-cljs Examples</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+        height: 100%;
+        overflow: auto;
+      }
+
+      #large-container {
+        width: 3000px;
+        height: 3000px;
+        overflow: hidden;
+      }
+
+      #scroll-container {
+        width: calc(100% - 22px);
+        height: calc(100vh - 22px);
+        overflow: auto;
+        margin: 10px;
+        border: 1px solid grey;
+      }
+    </style>
   </head>
   <body>
     <noscript>

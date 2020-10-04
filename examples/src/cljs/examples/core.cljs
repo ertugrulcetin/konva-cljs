@@ -6,12 +6,13 @@
             [examples.stars :refer [stars-comp]]
             [examples.draggable-text :refer [draggable-text-comp]]
             [examples.simple-animations :refer [simple-animation-comp]]
-            [examples.blurred-rect :refer [blurred-rect-comp]]))
+            [examples.blurred-rect :refer [blurred-rect-comp]]
+            [examples.canvas-scrolling :refer [canvas-scroll-comp]]))
 
 
 ;; REPLACE COMPONENTS MANUALLY...
 (defn main-panel []
-  blurred-rect-comp)
+  canvas-scroll-comp)
 
 
 (defn ^:dev/after-load mount-root []
