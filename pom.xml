@@ -4,14 +4,14 @@
   <groupId>konva-cljs</groupId>
   <artifactId>konva-cljs</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.10-SNAPSHOT</version>
   <name>konva-cljs</name>
   <description/>
   <scm>
     <url>https://github.com/ertugrulcetin/konva-cljs</url>
     <connection>scm:git:git://github.com/ertugrulcetin/konva-cljs.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ertugrulcetin/konva-cljs.git</developerConnection>
-    <tag>94bf3a246f920d491964fa29b9828f6fd141600b</tag>
+    <tag>4a80f69dc8a7aee4fce0b1fe42482185266a37a3</tag>
   </scm>
   <build>
     <sourceDirectory>src/clj</sourceDirectory>

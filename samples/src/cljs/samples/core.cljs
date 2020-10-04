@@ -1,24 +1,22 @@
 (ns samples.core
-  (:require
-   [reagent.dom :as rdom]
-   [re-frame.core :as re-frame]
-   [samples.events :as events]
-   [samples.views :as views]
-   [samples.config :as config]
-   ))
+  (:require [reagent.dom :as rdom]
+            [goog.dom :as dom]
+            [samples.rect-with-transformer :refer [rect-with-transformer-comp]]
+            [samples.custom-shape :refer [custom-shape-comp]]
+            [samples.stars :refer [stars-comp]]
+            [samples.draggable-text :refer [draggable-text-comp]]))
 
 
-(defn dev-setup []
-  (when config/debug?
-    (println "dev mode")))
+;; Replace components manually...
+(defn main-panel []
+  stars-comp)
+
 
 (defn ^:dev/after-load mount-root []
-  (re-frame/clear-subscription-cache!)
-  (let [root-el (.getElementById js/document "app")]
+  (let [root-el (dom/getElement "app")]
     (rdom/unmount-component-at-node root-el)
-    (rdom/render [views/main-panel] root-el)))
+    (rdom/render [main-panel] root-el)))
+
 
 (defn init []
-  (re-frame/dispatch-sync [::events/initialize-db])
-  (dev-setup)
   (mount-root))

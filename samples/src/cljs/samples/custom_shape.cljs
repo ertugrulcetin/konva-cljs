@@ -1,12 +1,9 @@
-(ns samples.views
-  (:require
-   [re-frame.core :as re-frame]
-   [samples.subs :as subs]
-   [konva-cljs.core :as k]
-   [konva-cljs.components :as c]
-   ))
+(ns samples.custom-shape
+  (:require [konva-cljs.core :as k]
+            [konva-cljs.components :as c]))
 
-(defn main-panel []
+
+(defn custom-shape-comp []
   [c/stage {:width  (.-innerWidth js/window)
             :height (.-innerHeight js/window)}
    [c/layer
