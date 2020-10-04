@@ -13,7 +13,7 @@ konva-cljs is a ClojureScript library for drawing complex canvas graphics using 
 
 ### Examples
 
-You can find a couple of samples in [/examples](/examples) **directory**.
+You can find a couple of samples in [/examples](/examples/src/cljs/examples) **directory**.
 
 
 ```clojure
