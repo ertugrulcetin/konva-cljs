@@ -1,6 +1,6 @@
 # konva-cljs
 
-A minimalistic ClojureScript interface to [konva-react](https://github.com/konvajs/react-konva)
+A minimalistic ClojureScript interface to [react-konva](https://github.com/konvajs/react-konva)
 
 
 konva-cljs is a ClojureScript library for drawing complex canvas graphics using React (**reagent**). It's a ClojureScript wrapper of [KonvaJS](https://konvajs.org/).
