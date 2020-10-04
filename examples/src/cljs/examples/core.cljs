@@ -5,12 +5,13 @@
             [examples.custom-shape :refer [custom-shape-comp]]
             [examples.stars :refer [stars-comp]]
             [examples.draggable-text :refer [draggable-text-comp]]
-            [examples.simple-animations :refer [simple-animation-comp]]))
+            [examples.simple-animations :refer [simple-animation-comp]]
+            [examples.blurred-rect :refer [blurred-rect-comp]]))
 
 
 ;; REPLACE COMPONENTS MANUALLY...
 (defn main-panel []
-  rect-with-transformer-comp)
+  blurred-rect-comp)
 
 
 (defn ^:dev/after-load mount-root []
