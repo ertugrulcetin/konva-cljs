@@ -4,12 +4,13 @@
             [examples.rect-with-transformer :refer [rect-with-transformer-comp]]
             [examples.custom-shape :refer [custom-shape-comp]]
             [examples.stars :refer [stars-comp]]
-            [examples.draggable-text :refer [draggable-text-comp]]))
+            [examples.draggable-text :refer [draggable-text-comp]]
+            [examples.simple-animations :refer [simple-animation-comp]]))
 
 
 ;; REPLACE COMPONENTS MANUALLY...
 (defn main-panel []
-  stars-comp)
+  rect-with-transformer-comp)
 
 
 (defn ^:dev/after-load mount-root []
