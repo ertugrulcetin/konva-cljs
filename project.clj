@@ -1,4 +1,8 @@
-(defproject konva-cljs "0.1.10-SNAPSHOT"
+(defproject konva-cljs "0.1.0"
+  :description "A minimalistic ClojureScript interface to konva-react"
+
+  :author "Ertuğrul Çetin"
+
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.773"
                   :exclusions [com.google.javascript/closure-compiler-unshaded
