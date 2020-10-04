@@ -1,4 +1,4 @@
-(ns samples.stars
+(ns examples.stars
   (:require [reagent.core :as r]
             [konva-cljs.components :as c]))
 

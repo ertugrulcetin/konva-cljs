@@ -1,4 +1,4 @@
-(defproject samples "0.1.0-SNAPSHOT"
+(defproject examples "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.773"
                   :exclusions [com.google.javascript/closure-compiler-unshaded
@@ -24,7 +24,7 @@
                 :builds {:app {:target :browser
                                :output-dir "resources/public/js/compiled"
                                :asset-path "/js/compiled"
-                               :modules {:app {:init-fn samples.core/init
+                               :modules {:app {:init-fn examples.core/init
                                                :preloads [devtools.preload]}}
 
                                :devtools {:http-root "resources/public"

@@ -1,4 +1,4 @@
-(ns samples.draggable-text
+(ns examples.draggable-text
   (:require [reagent.core :as r]
             [konva-cljs.components :as c]))
 

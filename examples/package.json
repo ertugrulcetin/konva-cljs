@@ -1,5 +1,5 @@
 {
-	"name": "samples",
+	"name": "examples",
 	"dependencies": {
 		"konva": "7.1.3",
 		"react": "16.13.0",

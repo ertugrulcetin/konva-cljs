@@ -1,4 +1,4 @@
-(ns samples.custom-shape
+(ns examples.custom-shape
   (:require [konva-cljs.core :as k]
             [konva-cljs.components :as c]))
 

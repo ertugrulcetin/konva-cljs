@@ -1,4 +1,4 @@
-(ns samples.rect-with-transformer
+(ns examples.rect-with-transformer
   (:require [konva-cljs.components :as c]
             [reagent.core :as r]))
 
