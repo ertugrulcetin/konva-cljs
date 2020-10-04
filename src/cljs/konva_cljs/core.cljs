@@ -161,4 +161,3 @@
 
 (defn fill-stroke-shape [ctx shape]
   (doto ctx (.fillStrokeShape shape)))
-

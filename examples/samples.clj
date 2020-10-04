@@ -56,3 +56,24 @@
                            :scale-y         (if (:dragging? star) 1.2 1)
                            :on-drag-start   (fn [_] (reset! stars (find-and-update star true @stars)))
                            :on-drag-end     (fn [_] (reset! stars (find-and-update star false @stars)))}])]]))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn- draggable-text []
+       (let [state (r/atom {:x 50 :y 50 :dragging? false})]
+            (fn []
+                [kc/stage {:width  (.-innerWidth js/window)
+                           :height (.-innerHeight js/window)}
+                 [kc/layer
+                  [kc/text {:text          "Draggable Text"
+                            :x             (:x @state)
+                            :y             (:y @state)
+                            :draggable     true
+                            :fill          (if (:dragging? @state) "green" "black")
+                            :on-drag-start #(swap! state assoc :dragging? true)
+                            :on-drag-end   #(swap! state assoc
+                                                   :dragging? false
+                                                   :x (.x (.-target %))
+                                                   :y (.y (.-target %)))}]]])))

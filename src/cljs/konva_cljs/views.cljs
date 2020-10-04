@@ -8,24 +8,9 @@
             [clojure.string :as str]
             ["konva" :default k]))
 
-;(println "A: " (:noise ko/filters))
+
 (defn main-panel []
-  [kc/stage {:width  (.-innerWidth js/window)
-             :height (.-innerHeight js/window)}
-   [kc/layer
-
-    [kc/rect
-     {
-      :filters    (r/as-element [(ob/get (.-Filters k) "Noise")])
-      :noise      1
-      :x          200
-      :y          10
-      :width      50
-      :height     50
-      :fill       "green"
-      :shadowBlur 10}]
-
-    ]])
+  )
 
 
 (defn ^:dev/after-load mount-root []
