@@ -7,12 +7,13 @@
             [examples.draggable-text :refer [draggable-text-comp]]
             [examples.simple-animations :refer [simple-animation-comp]]
             [examples.blurred-rect :refer [blurred-rect-comp]]
-            [examples.canvas-scrolling :refer [canvas-scroll-comp]]))
+            [examples.canvas-scrolling :refer [canvas-scroll-comp]]
+            [examples.free-drawing :refer [free-drawing-comp]]))
 
 
 ;; REPLACE COMPONENTS MANUALLY...
 (defn main-panel []
-  canvas-scroll-comp)
+  free-drawing-comp)
 
 
 (defn ^:dev/after-load mount-root []
