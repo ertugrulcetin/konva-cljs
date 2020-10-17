@@ -8,12 +8,13 @@
             [examples.simple-animations :refer [simple-animation-comp]]
             [examples.blurred-rect :refer [blurred-rect-comp]]
             [examples.canvas-scrolling :refer [canvas-scroll-comp]]
-            [examples.free-drawing :refer [free-drawing-comp]]))
+            [examples.free-drawing :refer [free-drawing-comp]]
+            [examples.stage-drag-scale :refer [stage-drag-scale-comp]]))
 
 
 ;; REPLACE COMPONENTS MANUALLY...
 (defn main-panel []
-  free-drawing-comp)
+  stage-drag-scale-comp)
 
 
 (defn ^:dev/after-load mount-root []
