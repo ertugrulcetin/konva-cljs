@@ -46,9 +46,10 @@
                                        :x           (:x @state)
                                        :y           (:y @state)
                                        :on-wheel    #(wheel % state)
-                                       :on-drag-end #(swap! state assoc
-                                                            :x (.x (.-target %))
-                                                            :y (.y (.-target %)))}
+                                       :on-drag-end #(when (= "Stage" (.getClassName (.-target %)))
+                                                       (swap! state assoc
+                                                              :x (.x (.-target %))
+                                                              :y (.y (.-target %))))}
                               [c/layer
                                [c/shape {:fill         "#00D2FF"
                                          :stroke       "black"
