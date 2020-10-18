@@ -4,12 +4,12 @@
             [konva-cljs.components :as c]
             [goog.dom :as dom]))
 
-(def rect-width 256)
-(def rect-height 256)
+(def rect-width 128)
+(def rect-height 128)
 
 
 (def img-p
-  (let [data    "<svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\"> \n<defs> \n<pattern id=\"smallGrid\" width=\"8\" height=\"8\" patternUnits=\"userSpaceOnUse\"> \n<path d=\"M 8 0 L 0 0 0 8\" fill=\"none\" stroke=\"gray\" stroke-width=\"0.5\" /> \n</pattern> \n<pattern id=\"grid\" width=\"80\" height=\"80\" patternUnits=\"userSpaceOnUse\"> \n<rect width=\"80\" height=\"80\" fill=\"url(#smallGrid)\" /> \n<path d=\"M 80 0 L 0 0 0 80\" fill=\"none\" stroke=\"gray\" stroke-width=\"1\" /> \n</pattern> \n</defs> \n<rect width=\"100%\" height=\"100%\" fill=\"url(#grid)\" /> \n</svg>"
+  (let [data    ""
         dom-url (or (.-URL js/window)
                     (.-webkitURL js/window)
                     js/window)
@@ -21,25 +21,47 @@
                    (set! (.-src img) url)))))
 
 
-(defn draw-grid [state]
-  (println "Scale: " (:scale @state))
-  (let [scale   (:scale @state)
-        x       (:x @state)
-        y       (:y @state)
-        width   (/ (.-innerWidth js/window) scale)
-        height  (/ (.-innerHeight js/window) scale)
-        start-x (* (js/Math.floor (/ (- (- x) width) rect-width)) rect-width)
-        end-x   (* (js/Math.floor (/ (+ (- x) (* width 2)) rect-width)) rect-width)
-        start-y (* (js/Math.floor (/ (- (- y) height) rect-height)) rect-height)
-        end-y   (* (js/Math.floor (/ (+ (- y) (* height 2)) rect-height)) rect-height)]
+(defn draw-board [state]
+  (let [scale       (:scale @state)
+        x           (:x @state)
+        y           (:y @state)
+        rect-width  (/ rect-width scale)
+        rect-height (/ rect-height scale)
+        width       (/ (.-innerWidth js/window) scale)
+        height      (/ (.-innerHeight js/window) scale)
+        start-x     (* (js/Math.floor (/ (- (- x) width) rect-width)) rect-width)
+        end-x       (* (js/Math.floor (/ (+ (- x) (* width 2)) rect-width)) rect-width)
+        start-y     (* (js/Math.floor (/ (- (- y) height) rect-height)) rect-height)
+        end-y       (* (js/Math.floor (/ (+ (- y) (* height 2)) rect-height)) rect-height)]
     (println "X: " x " Y: " y)
     (println "S: " start-x " E: " end-x)
-    (swap! state assoc :rects
-           (for [x (take-while (partial > end-x) (iterate (partial + rect-width) start-x))
-                 y (take-while (partial > end-y) (iterate (partial + rect-height) start-y))]
-             [x y]))
-    (println "Count: " (count (:rects @state)))
-    (.batchDraw (:stage @state))))
+    (swap! state assoc :board
+           {:w          width
+            :h          height
+            :vertical   (take-while (partial > end-x) (iterate (partial + rect-width) start-x))
+            :horizontal (take-while (partial > end-y) (iterate (partial + rect-height) start-y))})))
+
+
+(defn draw-grid [state]
+  ;(draw-board state)
+  (let [scale   (:scale @state)
+          x       (:x @state)
+          y       (:y @state)
+          ;rect-width*  (/ rect-width scale)
+          ;rect-height (/ rect-height scale)
+          width   (/ (.-innerWidth js/window) scale)
+          height  (/ (.-innerHeight js/window) scale)
+          start-x (* (js/Math.floor (/ (- (- x) width) rect-width)) rect-width)
+          end-x   (* (js/Math.floor (/ (+ (- x) (* width 2)) rect-width)) rect-width)
+          start-y (* (js/Math.floor (/ (- (- y) height) rect-height)) rect-height)
+          end-y   (* (js/Math.floor (/ (+ (- y) (* height 2)) rect-height)) rect-height)]
+      (println "X: " x " Y: " y)
+      (println "S: " start-x " E: " end-x)
+      (swap! state assoc :rects
+             (for [x (take-while (partial > end-x) (iterate (partial + rect-width) start-x))
+                   y (take-while (partial > end-y) (iterate (partial + rect-height) start-y))]
+               [x y]))
+      (.batchDraw (:stage @state))))
 
 
 (defn- wheel [e state]
@@ -59,12 +81,13 @@
                           (<= new-scale 0.15) 0.15
                           (>= new-scale 3.5) 3.5
                           :else new-scale)]
-        (swap! state assoc
-               :scale new-scale
-               :x (* (- (- (:x mouse-point)
-                           (/ (.-x pointer) new-scale))) new-scale)
-               :y (* (- (- (:y mouse-point)
-                           (/ (.-y pointer) new-scale))) new-scale)))
+        (do
+          (swap! state assoc
+                 :scale new-scale
+                 :x (* (- (- (:x mouse-point)
+                             (/ (.-x pointer) new-scale))) new-scale)
+                 :y (* (- (- (:y mouse-point)
+                             (/ (.-y pointer) new-scale))) new-scale))))
       (do
         (swap! state update :x - (.-deltaX e))
         (swap! state update :y - (.-deltaY e))))
@@ -104,6 +127,21 @@
                                                                 :y (.y (.-target %)))
                                                          (draw-grid state))}
                               [c/layer
+                               ;(doall
+                               ; (for [x (:vertical (:board @state))
+                               ;       y (:horizontal (:board @state))
+                               ;       :when (not= x y)]
+                               ;   ^{:key [y x]}
+                               ;   [c/line {:points       [x y x (:h (:board @state))]
+                               ;            :stroke       "grey"
+                               ;            :stroke-width 0.5}]))
+                               ;(doall
+                               ; (for [x (:vertical (:board @state))
+                               ;       y (:horizontal (:board @state))]
+                               ;   ^{:key [x y]}
+                               ;   [c/line {:points       [x y (:w (:board @state)) y]
+                               ;            :stroke       "grey"
+                               ;            :stroke-width 0.5}]))
                                (doall
                                 (for [position (:rects @state)]
                                   ^{:key position}
