@@ -33,8 +33,6 @@
         end-x       (* (js/Math.floor (/ (+ (- x) (* width 2)) rect-width)) rect-width)
         start-y     (* (js/Math.floor (/ (- (- y) height) rect-height)) rect-height)
         end-y       (* (js/Math.floor (/ (+ (- y) (* height 2)) rect-height)) rect-height)]
-    (println "X: " x " Y: " y)
-    (println "S: " start-x " E: " end-x)
     (swap! state assoc :board
            {:w          width
             :h          height
@@ -42,9 +40,32 @@
             :horizontal (take-while (partial > end-y) (iterate (partial + rect-height) start-y))})))
 
 
+(defn draw-cool-grids [state]
+  (let [x             (:x @state)
+        y             (:y @state)
+        width         (.-innerWidth js/window)
+        height        (.-innerHeight js/window)
+        x-mod         (mod x rect-width)
+        y-mod         (mod y rect-height)
+        v-lines-count (/ width rect-width)
+        h-lines-count (/ height rect-height)
+        v-lines       (if true #_(zero? x-mod)
+                        (take (inc v-lines-count) (iterate (partial + rect-width) (- x)))
+                        (let [lines (take (dec v-lines-count) (iterate (partial + rect-width) (- (+ x x-mod))))]
+                          (concat [(- x)] lines [(+ (last lines) (- rect-width x-mod))])))
+        h-lines       (if true #_(zero? x-mod)
+                        (take (inc h-lines-count) (iterate (partial + rect-height) (- y)))
+                        (let [lines (take (dec h-lines-count) (iterate (partial + rect-width) (- (+ y y-mod))))]
+                          (concat [(- y)] lines [(+ (last lines) (- rect-height y-mod))])))]
+    ;(swap! state assoc :v-lines v-lines :h-lines h-lines)
+    (swap! state assoc :v-lines v-lines :h-lines h-lines)
+    #_(.batchDraw (:stage state))))
+
+
 (defn draw-grid [state]
+  (draw-cool-grids state)
   ;(draw-board state)
-  (let [scale   (:scale @state)
+  #_(let [scale   (:scale @state)
           x       (:x @state)
           y       (:y @state)
           ;rect-width*  (/ rect-width scale)
@@ -55,8 +76,6 @@
           end-x   (* (js/Math.floor (/ (+ (- x) (* width 2)) rect-width)) rect-width)
           start-y (* (js/Math.floor (/ (- (- y) height) rect-height)) rect-height)
           end-y   (* (js/Math.floor (/ (+ (- y) (* height 2)) rect-height)) rect-height)]
-      (println "X: " x " Y: " y)
-      (println "S: " start-x " E: " end-x)
       (swap! state assoc :rects
              (for [x (take-while (partial > end-x) (iterate (partial + rect-width) start-x))
                    y (take-while (partial > end-y) (iterate (partial + rect-height) start-y))]
@@ -90,7 +109,9 @@
                              (/ (.-y pointer) new-scale))) new-scale))))
       (do
         (swap! state update :x - (.-deltaX e))
-        (swap! state update :y - (.-deltaY e))))
+        (swap! state update :y - (.-deltaY e))
+        (println {:x (- (:x @state))
+                  :y (- (:y @state))})))
     (.batchDraw stage)))
 
 
@@ -116,7 +137,6 @@
                                                          (wheel % state)
                                                          (draw-grid state))
                                        :on-drag-start #(when (= "Stage" (.getClassName (.-target %)))
-                                                         (println "Drag started")
                                                          (swap! state assoc
                                                                 :x (.x (.-target %))
                                                                 :y (.y (.-target %)))
@@ -126,34 +146,43 @@
                                                                 :x (.x (.-target %))
                                                                 :y (.y (.-target %)))
                                                          (draw-grid state))}
-                              [c/layer
+                              #_[c/layer
+                               (let [scale        (:scale @state)
+                                     size         128
+                                     bound        (js/Math.pow 2 14)
+                                     stroke-width (if (> (/ 0.5 scale) 0.5)
+                                                    0.5
+                                                    (/ 0.5 scale))]
+                                 [:<>
+                                  (doall
+                                   (for [[i l] (map-indexed vector (take-while #(<= % bound) (iterate (partial + size) (- bound))))]
+                                     ^{:key i}
+                                     [c/line {:points       [l (- bound) l bound]
+                                              :stroke       "grey"
+                                              :stroke-width stroke-width}]))
+                                  (doall
+                                   (for [[i l] (map-indexed vector (take-while #(<= % bound) (iterate (partial + size) (- bound))))]
+                                     ^{:key i}
+                                     [c/line {:points       [(- bound) l bound l]
+                                              :stroke       "grey"
+                                              :stroke-width stroke-width}]))])
                                ;(doall
-                               ; (for [x (:vertical (:board @state))
-                               ;       y (:horizontal (:board @state))
-                               ;       :when (not= x y)]
-                               ;   ^{:key [y x]}
-                               ;   [c/line {:points       [x y x (:h (:board @state))]
+                               ; (for [x (:v-lines @state)]
+                               ;   ^{:key x}
+                               ;   [c/line {:points       [x 0 x (.-innerHeight js/window)]
                                ;            :stroke       "grey"
                                ;            :stroke-width 0.5}]))
                                ;(doall
-                               ; (for [x (:vertical (:board @state))
-                               ;       y (:horizontal (:board @state))]
-                               ;   ^{:key [x y]}
-                               ;   [c/line {:points       [x y (:w (:board @state)) y]
+                               ; (for [y (:h-lines @state)]
+                               ;   ^{:key y}
+                               ;   [c/line {:points       [0 y (.-innerWidth js/window) y]
                                ;            :stroke       "grey"
                                ;            :stroke-width 0.5}]))
-                               (doall
-                                (for [position (:rects @state)]
-                                  ^{:key position}
-                                  [c/rect {:x            (first position)
-                                           :y            (second position)
-                                           :width        rect-width
-                                           :height       rect-height
-                                           :stroke-width 5
-                                           :opacity      0.1
-                                           :stroke       "grey"}]))]
+                               ]
                               [c/layer
-                               [c/shape {:fill         "#00D2FF"
+                               [c/shape {:x            0
+                                         :y            0
+                                         :fill         "#00D2FF"
                                          :stroke       "black"
                                          :stroke-width 4
                                          :ref          #(swap! state assoc :shape %)
